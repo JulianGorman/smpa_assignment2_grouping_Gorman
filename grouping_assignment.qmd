@@ -61,11 +61,11 @@ Take a moment to look at the various categories included for each disbursement.
 
 Without doing any analysis yet, what are three questions you might try to answer using this dataset? Write your narrative answers in the spaces below.
 
-1.  
+1.  Which cycle did the most disbursements occur in?
 
-2.  
+2.  What type of services did the campaign committee pay out the most to?
 
-3.  
+3.  Did the campaign pay out to the same recipient numerous times?
 
 ## Coding Assignment Questions
 
@@ -81,7 +81,9 @@ How much was spent in the 2017 vs. 2018 reporting year?
 
 ```{r}
 
-
+payments %>% 
+  group_by(report_year) %>% 
+  summarise(total_amt = sum(disbursement_amount))
 
 
 
@@ -93,8 +95,10 @@ Tally the total overall disbursement amounts for each month (distinguishing betw
 
 ```{r}
 
-
-
+payments %>% 
+  group_by(disbursement_year, disbursement_month) %>% 
+  summarise(total_amt = sum(disbursement_amount)) %>% 
+  arrange(desc(total_amt))
 
 
 
@@ -104,6 +108,11 @@ Which recipient (recipient_name) was paid the most in the 2020 election cycle?
 
 ```{r}
 
+payments %>%
+  filter(election_cycle == "2020") %>% 
+  group_by(recipient_name) %>% 
+  summarise(total_amt = sum(disbursement_amount)) %>% 
+  arrange(desc(total_amt))
 
 
 
@@ -116,8 +125,9 @@ Look at what this recipient was paid for. What service or good (see the "disburs
 
 ```{r}
 
-
-
+payments %>% 
+  filter(recipient_name == "American Made Consultants, LLC")
+  group_by(disbursement_description)
 
 
 
@@ -127,7 +137,10 @@ What's the most common category overall (see "disbursement_description") the cam
 
 ```{r}
 
-
+payments %>% 
+  group_by(disbursement_description) %>% 
+  summarise(count = n()) %>%
+  arrange(desc(count))
 
 
 
@@ -138,7 +151,12 @@ Who were the 5 biggest recipients of campaign spending on "LEGAL CONSULTING"..?
 
 ```{r}
 
-
+payments %>% 
+  filter(disbursement_description == "LEGAL CONSULTING") %>% 
+  group_by(recipient_name) %>% 
+  summarise(total_amt = sum(disbursement_amount)) %>% 
+  arrange(desc(total_amt))
+  
 
 
 
@@ -151,6 +169,11 @@ Who are the top 5 individuals (vs. organization) were paid by the campaign commi
 
 ```{r}
 
+payments %>% 
+  filter(entity_type == "IND") %>% 
+  group_by(recipient_name) %>% 
+  summarise(total_amt = sum(disbursement_amount)) %>% 
+  arrange(desc(total_amt))
 
 
 
@@ -164,7 +187,11 @@ For the indvidual who was paid the most, which payment category (disbursement_de
 
 ```{r}
 
-
+payments %>% 
+  filter(recipient_name == "GLASSNER, MICHAEL") %>% 
+  group_by(disbursement_description, disbursement_amount) %>% 
+  summarise(count = n()) %>%
+  arrange(desc(count))
 
 
 
