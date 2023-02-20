@@ -125,9 +125,14 @@ payments %>%
 ```
 
 Look at what this recipient was paid for. What service or good (see the "disbursement_description") were they paid the most for?
-
+Answer: The most service that American Made Media Consultants, LLC was paid the most for was "Placed Media".
 ```{r}
-
+payments %>% 
+  filter(recipient_name == "AMERICAN MADE MEDIA CONSULTANTS, LLC") %>% 
+  group_by(disbursement_description) %>% 
+  summarise(total_amt = sum(disbursement_amount)) %>% 
+  arrange(desc(total_amt))
+  
 
 
 
